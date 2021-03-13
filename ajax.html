@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3 AJAX</title>
+    <link rel="stylesheet" type="text/css" href="rwd.css">
+</head>
+
+<body onload="getData(0,8);">
+    <nav class="navbar">
+        <div>My Website</div>
+        <div class="desktop-menu">
+            <div>Item 1</div>
+            <div>Item 2</div>
+            <div>Item 3</div>
+            <div>Item 4</div>
+        </div>
+        <div class="mobile-menu">
+            <img src="menu.png">
+        </div>
+    </nav>
+    <div class="welcome">Welcome to MyHome
+    </div>
+    <main id="main">
+    </main>
+    <div class="load">
+        <button class="btn" id="btn">Load More
+        </button>
+    </div>
+    <script type="text/javascript">
+        function getData(number, time) {
+            let req = new XMLHttpRequest();
+            req.open("get", "https://padax.github.io/taipei-day-trip-resources/taipei-attractions.json");
+            req.onload = function () {
+                let data = JSON.parse(this.responseText);
+                console.log(data);
+                for (let i = number; i < time; i++) {
+                    let spotName = data.result.results[i].stitle;
+                    let pic = data.result.results[i].file;
+                    let eachPic = pic.split("http");
+                    let firstPic = "http" + eachPic[1]
+                    let main = document.querySelector("#main")
+                    let cell = document.createElement("div");
+                    cell.className = "box";
+                    main.appendChild(cell);
+                    let img = document.createElement("img");
+                    img.src = firstPic
+                    let text = document.createElement("div");
+                    text.textContent = spotName;
+                    cell.appendChild(img);
+                    cell.appendChild(text);
+                    let btn = document.getElementById("btn");
+                    btn.onclick = function () {
+                        getData(number + 8, time + 8);
+                    };
+                };
+            };
+            req.send();
+        };
+    </script>
+</body>
+
+</html>
